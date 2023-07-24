@@ -20,9 +20,9 @@ const App = () => {
   }
   useEffect(hook, [])
 
-  const addContact = (event) => {
+  const addContact = event => {
     event.preventDefault()
-    if (!persons.every((obj) => obj.name !== newName)) {
+    if (!persons.every(obj => obj.name !== newName)) {
       alert(`${newName} is already added to phonebook`)
       return
     }
@@ -41,13 +41,13 @@ const App = () => {
       })
   }
 
-  const handleInputChange = (setState) => (event) => {
+  const handleInputChange = setState => event => {
     setState(event.target.value)
   }
 
   const personsToShow = filter === ''
     ? persons
-    : persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase()))
+    : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
 
   return (
     <div>
