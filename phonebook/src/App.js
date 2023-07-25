@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   const hook = () => {
     personService
@@ -19,6 +21,13 @@ const App = () => {
       })
   }
   useEffect(hook, [])
+
+  const showSuccesBar = text => {
+    setSuccessMessage(text)
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+  }
 
   const addContact = event => {
     event.preventDefault()
@@ -43,6 +52,7 @@ const App = () => {
         setPersons(persons.concat(addedPerson))
         setNewName('')
         setNewNumber('')
+        showSuccesBar(`Added ${addedPerson.name}`)
       })
   }
 
@@ -69,6 +79,7 @@ const App = () => {
         setPersons(persons.map(p => p.id === person.id ? returnedPerson : p))
         setNewName('')
         setNewNumber('')
+        showSuccesBar(`Updated ${returnedPerson.name}`)
       })
   }
 
@@ -83,6 +94,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} />
+
       <Filter filter={filter} onInputChange={handleInputChange(setFilter)} />
 
       <h3>Add a new</h3>
