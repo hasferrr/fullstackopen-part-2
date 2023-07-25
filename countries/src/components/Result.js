@@ -1,11 +1,11 @@
-const Result = ({ countryList, setShowCountry }) => {
+const Result = ({ countryList, setCountry }) => {
   if (countryList.length === 0) {
     return null
   }
 
   if (countryList.length === 1) {
     setTimeout(() => {
-      setShowCountry(countryList[0])
+      setCountry(countryList[0])
     }, 0);
     return null
   }
@@ -19,7 +19,7 @@ const Result = ({ countryList, setShowCountry }) => {
       {countryList.map(country =>
         <div key={country.name.common}>
           {country.name.common}
-          <button onClick={() => setShowCountry(country)}>show</button>
+          <button onClick={() => setCountry(country)}>show</button>
         </div>
       )}
     </div>

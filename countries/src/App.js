@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react'
 import Country from './components/Country'
 import Filter from './components/Filter'
 import Result from './components/Result'
+import Weather from './components/Weather'
 import restCountries from './services/countries'
 
 const App = () => {
   const [countryList, setCountryList] = useState([])
   const [inputSearch, setInputSearch] = useState('')
-  const [showCountry, setShowCountry] = useState(null)
+  const [country, setCountry] = useState(null)
+  const [weather, setWeather] = useState(null)
 
   useEffect(() => {
     restCountries
@@ -17,6 +19,20 @@ const App = () => {
         setCountryList(data)
       })
   }, [])
+
+  useEffect(() => {
+    if (country === null) {
+      return
+    }
+    restCountries
+      .getWeather(country.name.common)
+      .then(data => {
+        setWeather(data)
+      })
+      .catch(error => {
+        setWeather(null)
+      })
+  }, [country])
 
   const handleFilter = event => setInputSearch(event.target.value)
 
@@ -34,8 +50,9 @@ const App = () => {
         value={inputSearch}
         onChange={handleFilter}
       />
-      <Result countryList={countryListToShow} setShowCountry={setShowCountry}/>
-      <Country country={showCountry} />
+      <Result countryList={countryListToShow} setCountry={setCountry} />
+      <Country country={country} />
+      <Weather country={country} weather={weather} />
     </div>
   )
 }
