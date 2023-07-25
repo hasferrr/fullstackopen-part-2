@@ -25,7 +25,7 @@ const App = () => {
       return
     }
     restCountries
-      .getWeather(country.name.common)
+      .getWeather(country.capital)
       .then(data => {
         setWeather(data)
       })

@@ -22,7 +22,7 @@ const Country = ({ country }) => {
         <img
           src={country.flags.png}
           alt={country.flags.alt}
-          style={{ maxWidth: 320 }}
+          style={{ maxWidth: 200 }}
         />
       </div>
     </div>
