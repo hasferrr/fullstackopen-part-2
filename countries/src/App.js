@@ -17,14 +17,20 @@ const App = () => {
       })
   }, [])
 
+  const handleFilter = event => setInputSearch(event.target.value)
+
+  const countryListToShow = inputSearch
+    ? countryList.filter(country => country.toLowerCase().includes(inputSearch.toLowerCase()))
+    : []
+
   return (
     <div>
       Find Countries
       <Filter
         value={inputSearch}
-        onChange={event => setInputSearch(event.target.value)}
+        onChange={handleFilter}
       />
-      <Result countryList={countryList} />
+      <Result countryList={countryListToShow} />
     </div>
   )
 }
