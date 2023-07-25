@@ -11,7 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [color, setColor] = useState('green')
 
   const hook = () => {
     personService
@@ -22,10 +23,11 @@ const App = () => {
   }
   useEffect(hook, [])
 
-  const showSuccesBar = text => {
-    setSuccessMessage(text)
+  const showNotification = (text, color = 'green') => {
+    setNotificationMessage(text)
+    setColor(color)
     setTimeout(() => {
-      setSuccessMessage(null)
+      setNotificationMessage(null)
     }, 5000)
   }
 
@@ -52,13 +54,13 @@ const App = () => {
         setPersons(persons.concat(addedPerson))
         setNewName('')
         setNewNumber('')
-        showSuccesBar(`Added ${addedPerson.name}`)
+        showNotification(`Added ${addedPerson.name}`)
       })
   }
 
   const deleteContact = id => {
-    const personToBeDeleted = persons.find(person => id === person.id).name
-    if (!window.confirm(`Delete ${personToBeDeleted} ?`)) {
+    const personToBeDeleted = persons.find(person => id === person.id)
+    if (!window.confirm(`Delete ${personToBeDeleted.name} ?`)) {
       return
     }
     personService
@@ -70,16 +72,30 @@ const App = () => {
           }
         }))
       })
+      .catch(error => {
+        showNotification(
+          `Information of ${personToBeDeleted.name} has already been removed from the server`,
+          'red'
+        )
+        setPersons(persons.filter(p => p.id !== personToBeDeleted.id))
+      })
   }
 
-  const updateContact = person => {
+  const updateContact = personToBeUpdated => {
     personService
-      .update(person.id, { ...person, number: newNumber })
+      .update(personToBeUpdated.id, { ...personToBeUpdated, number: newNumber })
       .then(returnedPerson => {
-        setPersons(persons.map(p => p.id === person.id ? returnedPerson : p))
+        setPersons(persons.map(p => p.id === personToBeUpdated.id ? returnedPerson : p))
         setNewName('')
         setNewNumber('')
-        showSuccesBar(`Updated ${returnedPerson.name}`)
+        showNotification(`Updated ${returnedPerson.name}`)
+      })
+      .catch(error => {
+        showNotification(
+          `Information of ${personToBeUpdated.name} has already been removed from the server`,
+          'red'
+        )
+        setPersons(persons.filter(p => p.id !== personToBeUpdated.id))
       })
   }
 
@@ -94,7 +110,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={notificationMessage} color={color} />
 
       <Filter filter={filter} onInputChange={handleInputChange(setFilter)} />
 
