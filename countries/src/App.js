@@ -12,15 +12,17 @@ const App = () => {
     restCountries
       .getAll()
       .then(data => {
-        const countryNameList = data.map(c => c.name.common)
-        setCountryList(countryNameList)
+        setCountryList(data)
       })
   }, [])
 
   const handleFilter = event => setInputSearch(event.target.value)
 
   const countryListToShow = inputSearch
-    ? countryList.filter(country => country.toLowerCase().includes(inputSearch.toLowerCase()))
+    ? countryList.filter(country =>
+      country.name.common
+        .toLowerCase()
+        .includes(inputSearch.toLowerCase()))
     : []
 
   return (
