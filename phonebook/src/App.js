@@ -94,11 +94,15 @@ const App = () => {
         showNotification(`Updated ${returnedPerson.name}`)
       })
       .catch(error => {
-        showNotification(
-          `Information of ${personToBeUpdated.name} has already been removed from the server`,
-          'red'
-        )
-        setPersons(persons.filter(p => p.id !== personToBeUpdated.id))
+        if (error.response.data.type.number !== undefined) {
+          showNotification(error.response.data.error, 'red')
+        } else {
+          showNotification(
+            `Information of ${personToBeUpdated.name} has already been removed from the server`,
+            'red'
+          )
+          setPersons(persons.filter(p => p.id !== personToBeUpdated.id))
+        }
       })
   }
 
