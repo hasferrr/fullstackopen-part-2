@@ -56,6 +56,9 @@ const App = () => {
         setNewNumber('')
         showNotification(`Added ${addedPerson.name}`)
       })
+      .catch(error => {
+        showNotification(error.response.data.error, 'red')
+      })
   }
 
   const deleteContact = id => {
